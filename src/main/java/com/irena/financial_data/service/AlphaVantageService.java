@@ -30,17 +30,27 @@ public class AlphaVantageService {
     }
 
     public List<StockItemDto> fetchDailyStockData(String symbol) {
-        String url = "/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey=" + apiKey;
 
-        AlphaVantageResponse response = webClient.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(AlphaVantageResponse.class)
-                .onErrorResume(e -> {
-                    log.error("Error fetching data from Alpha Vantage: {}", e.getMessage());
-                    return Mono.empty();
-                })
-                .block();
+
+        String url = "/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey=" + apiKey;
+        AlphaVantageResponse response =  null;
+
+        try {
+            response = webClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(AlphaVantageResponse.class)
+                    .onErrorResume(e -> {
+                        log.error("Error fetching data from Alpha Vantage: {}", e.getMessage());
+                        return Mono.empty();
+                    })
+                    .block();
+        } catch (Exception e) {
+            log.error("Error fetching stocks", e);
+            return new ArrayList<>();
+        }
+
+
 
         if (response == null || response.getTimeSeries() == null) {
             log.error("Invalid response from Alpha Vantage");
@@ -72,4 +82,5 @@ public class AlphaVantageService {
 
         return stockItems;
     }
+
 }

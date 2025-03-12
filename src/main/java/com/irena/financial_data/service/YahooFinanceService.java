@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
@@ -20,17 +19,25 @@ public class YahooFinanceService {
     public List<StockItemDto> fetchStockData(String symbol) {
 
         WebClient webClient = WebClient.create("https://query1.finance.yahoo.com");
-        String url = "/v8/finance/chart/" + symbol + "?interval=1d&range=1mo";
+        String url = "/v8/finance/chart/" + symbol + "?interval=60m&range=1mo";
 
-        YahooFinanceResponse response = webClient.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(YahooFinanceResponse.class)
-                .onErrorResume(e -> {
-                    System.err.println("Error fetching data from Yahoo Finance: " + e.getMessage());
-                    return Mono.empty();
-                })
-                .block();
+        YahooFinanceResponse response=null;
+
+        try {
+            response = webClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(YahooFinanceResponse.class)
+                    .onErrorResume(e -> {
+                        System.err.println("Error fetching data from Yahoo Finance: " + e.getMessage());
+                        return Mono.empty();
+                    })
+                    .block();
+        }
+        catch (Exception e) {
+            log.error("Error fetching stocks", e);
+            return new ArrayList<>();
+        }
 
         if (response == null || response.getChart() == null || response.getChart().getResult() == null) {
             log.error("Invalid response from Yahoo Finance");
