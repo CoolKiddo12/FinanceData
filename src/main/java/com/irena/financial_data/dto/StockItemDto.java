@@ -5,14 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class StockItemDto {
+    private String id;
     private String symbol;
-    private Instant timestamp;
+    private long timestamp;
     private BigDecimal open;
     private BigDecimal high;
     private BigDecimal low;

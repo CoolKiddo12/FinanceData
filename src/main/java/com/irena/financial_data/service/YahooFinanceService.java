@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -56,10 +57,12 @@ public class YahooFinanceService {
                     quote.getVolume().get(i) == null) {
                 continue;
             }
+            Instant date = Instant.ofEpochSecond(timestamps.get(i));
 
             StockItemDto stockItem = new StockItemDto();
+            stockItem.setId(UUID.randomUUID().toString());
             stockItem.setSymbol(result.getMeta().getSymbol());
-            stockItem.setTimestamp(Instant.ofEpochSecond(timestamps.get(i)));
+            stockItem.setTimestamp(date.toEpochMilli());
             stockItem.setOpen(BigDecimal.valueOf(quote.getOpen().get(i)));
             stockItem.setHigh(BigDecimal.valueOf(quote.getHigh().get(i)));
             stockItem.setLow(BigDecimal.valueOf(quote.getLow().get(i)));

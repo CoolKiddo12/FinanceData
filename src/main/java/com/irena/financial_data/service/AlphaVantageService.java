@@ -15,6 +15,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -68,9 +69,12 @@ public class AlphaVantageService {
                 continue;
             }
 
+            long epochMilli = Instant.from(date.atStartOfDay(ZoneOffset.UTC)).toEpochMilli();
+
             StockItemDto stockItem = new StockItemDto();
+            stockItem.setId(UUID.randomUUID().toString());
             stockItem.setSymbol(response.getMetaData().getSymbol());
-            stockItem.setTimestamp(Instant.from(date.atStartOfDay(ZoneOffset.UTC)));
+            stockItem.setTimestamp(epochMilli);
             stockItem.setOpen(new BigDecimal(data.getOpen()));
             stockItem.setHigh(new BigDecimal(data.getHigh()));
             stockItem.setLow(new BigDecimal(data.getLow()));
