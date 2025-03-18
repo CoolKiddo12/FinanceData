@@ -25,11 +25,9 @@ public class StockSchedulerService {
             "MSFT"
     );
 
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 900000)
     public void fetchAllStockData() {
         log.info("Starting scheduled stock data fetch...");
-
-
 
         for (String symbol : SYMBOLS) {
             log.info("Fetching and saving stock data for {}", symbol);

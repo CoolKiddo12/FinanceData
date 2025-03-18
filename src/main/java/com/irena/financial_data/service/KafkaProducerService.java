@@ -26,7 +26,7 @@ public class KafkaProducerService {
                 if (exception != null) {
                     exception.printStackTrace();
                 } else {
-                    System.out.println("Message sent to topic " + metadata.topic() + " with offset " + metadata.offset());
+                    //System.out.println("Message sent to topic " + metadata.topic() + " with offset " + metadata.offset());
                 }
             });
         } catch (Exception e) {
